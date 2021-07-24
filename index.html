@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>My Phonebook</title>
+<style>
+	body {
+  margin: 0;
+  background-color: #e9ebee;
+  background-image: url("https://i.pinimg.com/236x/b6/2f/dc/b62fdcdc6dba22fb208ab0191431f999.jpg" );
+  background-repeat: repeat;
+}
+
+#navbar {
+  display: grid;
+  min-height: 100px;
+  grid-auto-flow: column;
+  background-color: #fcfcfc;
+  grid-gap: 1.5em;
+  padding: 0 40px;
+  -webkit-box-shadow: -1px 4px 5px 0px rgba(209, 205, 209, 1);
+  -moz-box-shadow: -1px 4px 5px 0px rgba(209, 205, 209, 1);
+  box-shadow: -1px 4px 5px 0px rgba(209, 205, 209, 1);
+}
+
+#logo {
+  display: grid;
+  justify-content: start;
+  align-content: center;
+  font-family: "Open Sans", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.logo span {
+  color: rgb(4,192,255);
+}
+
+#links {
+  display: grid;
+  justify-content: right;
+  align-content: center;
+  grid-auto-flow: column;
+  grid-gap: 1.5em;
+  font-family: "Open Sans", sans-serif;
+}
+
+#links a {
+  text-decoration: none;
+  color: #333;
+}
+
+#links a:hover {
+  color: #0474bc;
+}
+
+/* Tablet to Desktop */
+@media (min-width: 768px) {
+  .mobile-menu,
+  .mobile-btn,
+  .fa-bars {
+    display: none;
+  }
+}
+#myUL {
+  list-style-type: none;
+  padding: 40px;
+  margin: auto;
+}
+
+#myUL li{
+  border-top:10px solid white;
+  /*border: 10px solid rgb(239,239,239);*/
+  margin-top: -1px;
+  background-color: rgb(239,239,239);
+  padding: 12px;  
+  display: block;
+}
+#myUL li a{
+    text-decoration: none;
+  font-size: 24px;
+  font-weight: bolder;
+  color: #111;
+
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+.img-circular{
+ width: 100px;
+ height: 100px;
+ background-image: url('data:image/png;base64,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');
+ background-size: cover;
+ display:block;
+ float:right;
+ border-radius: 50px;
+ -webkit-border-radius: 500px;
+ -moz-border-radius: 500px;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav>
+      <div id="navbar">
+        <div id="logo">
+          <div class="logo">MY<span>Phone</span> Book</div>
+        </div>
+        <div id="links">
+          <a href="#">Home</a>
+          <a href="#about">About</a>
+          <a href="#about">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div>
+  	<ul id="myUL">
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">A</div>
+    <li><div id="contact"><a href="#">Abc</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Abc</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">B</div>
+    <li><div id="contact"><a href="#">Bcd</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Bcd</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">C</div>
+    <li><div id="contact"><a href="#">Cde</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Cde</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">D</div>
+    <li><div id="contact"><a href="#">Def</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Def</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">E</div>
+    <li><div id="contact"><a href="#">Efg</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Efg</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">F</div>
+    <li><div id="contact"><a href="#">Fgh</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Fgh</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">G</div>
+    <li><div id="contact"><a href="#">Ghi</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Ghi</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">H</div>
+    <li><div id="contact"><a href="#">Hij</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Hij</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">I</div>
+    <li><div id="contact"><a href="#">Ijk</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Ijk</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">J</div>
+    <li><div id="contact"><a href="#">Jkl</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Jkl</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">K</div>
+    <li><div id="contact"><a href="#">Klm</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Klm</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">L</div>
+    <li><div id="contact"><a href="#">Lmn</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Lmn</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">M</div>
+    <li><div id="contact"><a href="#">Mno</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Mno</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">N</div>
+    <li><div id="contact"><a href="#">Nop</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Nop</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">O</div>
+    <li><div id="contact"><a href="#">Opq</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Opq</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">P</div>
+    <li><div id="contact"><a href="#">Pqr</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Pqr</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">Q</div>
+    <li><div id="contact"><a href="#">Qrs</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Qrs</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">R</div>
+    <li><div id="contact"><a href="#">Rst</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Rst</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">S</div>
+    <li><div id="contact"><a href="#">Stu</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Stu</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">T</div>
+    <li><div id="contact"><a href="#">Tuv</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Tuv</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">U</div>
+    <li><div id="contact"><a href="#">Uvw</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Uvw</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">V</div>
+    <li><div id="contact"><a href="#">Vwx</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Vwx</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">W</div>
+    <li><div id="contact"><a href="#">Wxy</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Wxy</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">X</div>
+    <li><div id="contact"><a href="#">Xyz</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Xyz</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">Y</div>
+    <li><div id="contact"><a href="#">Yza</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Yza</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+
+    
+
+    <div style="background-color:transparent; ;height:50px;font-size: 40px;text-align: center;">Z</div>
+    <li><div id="contact"><a href="#">Zab</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+    <li><div id="contact"><a href="#">Zab</a>
+        <div class="img-circular"></div>
+        <br><br>
+        <span style="font-size:18px;color: rgb(4, 192, 255);">☎️</span>&nbsp;9876543210<br>
+        <span style="font-size:18px;">💌</span>&nbsp;Address: abc<br>
+        <span style="font-size:18px;">📭</span>&nbsp;Email:abc@gmail.com
+    </div></li>
+</ul>
+  </div>
+<footer>
+	<div id="about" style='background-color: white;height:50px;margin-top: 50px;padding-top: 40px;'>
+		<span style="padding-left: 30px;">Made with ❤️ by Urvashi</span>
+		<span style="padding-left: 400px;text-align: right;">Contact:urvashi0231.cse19@chitkara.edu.in</span>
+		<span style="padding-left: 30px;text-align: right;">MyPhonebook Copyright © 2021 by Urvashi</span>
+	</div>
+</footer>
+</body>
+</html>
